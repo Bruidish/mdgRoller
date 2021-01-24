@@ -1,0 +1,125 @@
+/**
+ * @author Michel Dumont <michel.dumont.io>
+ * @see http://compass-style.org/reference/compass/css3/
+ * @version 1.0.0 - 2021-01-23
+ * @license http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ * @package MdgRoller
+ */
+
+@charset 'UTF-8';
+@import 'compass';
+@import 'variables';
+
+@include global-reset;
+
+.roller-wrap {
+    box-sizing: border-box;
+    * {
+        box-sizing: border-box;
+    }
+
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    background-color: $color-background;
+
+    .roller-collection-wrap {
+        scroll-behavior: smooth;
+        overflow-x: scroll;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        width: 100%;
+        padding-bottom: 20px;
+
+        .roller-collection {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-rows: auto;
+
+            .roller-item {
+                width: 200px;
+                height: 300px;
+                border: 5px solid $color-background;
+            }
+        }
+    }
+
+    .roller-scrollbar-wrap {
+        position: relative;
+        width: 100%;
+
+        .roller-scrollbar {
+            width: 100%;
+            margin: 0 auto;
+            background: $color-scrollbar;
+
+            .roller-scrollbar-handler {
+                position: relative;
+                z-index: 15;
+                height: $height-scrollbarHandler;
+                cursor: pointer;
+                background: $color-scrollbarHandler;
+                @include border-radius($height-scrollbarHandler);
+                @include transition(box-shadow .3s);
+                &:hover,
+                &.focus {
+                    @include box-shadow(0 0 4px rgba(0, 0, 0, .5))
+                }
+            }
+
+        }
+
+        &.isInactive {
+            height: 0;
+            overflow: hidden;
+        }
+    }
+
+    .roller-action-wrap {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 90%;
+        z-index: 10;
+        pointer-events: none;
+
+        button {
+            position: absolute;
+            top: 50%;
+            cursor: pointer;
+            transform: translateY(-50%);
+            pointer-events: all;
+            width: 50px;
+            height: 50px;
+            background: #fff;
+            border: none;
+            opacity: 0;
+            @include transition(opacity .3s, margin .3s);
+            @include border-radius(50%);
+
+            &:hover {
+                margin: 0 30px;
+                opacity: .9!important;
+            }
+            &.o-none {
+                cursor: default;
+                opacity: 0!important;
+            }
+        }
+    }
+
+    .roller-collection-wrap:hover{
+        & ~ .roller-action-wrap {
+            button {
+                margin: 0 30px;
+                opacity: .5;
+            }
+        }
+    }
+}

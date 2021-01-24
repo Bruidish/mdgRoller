@@ -1,0 +1,114 @@
+<!--
+    @author Michel Dumont <michel.dumont.io>
+    @version 1.0.0 - 2021-01-23
+    @license http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+    @package MdgRoller
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>MdgRoller</title>
+</head>
+<body>
+
+<h1 style="padding: 20px 100px">Mdg Roller</h1>
+<div id="roller-1" class="roller-wrap">
+    <div class="roller-collection-wrap">
+        <ul class="roller-collection">
+            <li class="roller-item" style="background-color:rebeccapurple"></li>
+            <li class="roller-item" style="background-color:blue"></li>
+            <li class="roller-item" style="background-color:red"></li>
+            <li class="roller-item" style="background-color:green"></li>
+            <li class="roller-item" style="background-color:yellow"></li>
+            <li class="roller-item" style="background-color:rosybrown"></li>
+            <li class="roller-item" style="background-color:darkcyan"></li>
+            <li class="roller-item" style="background-color:royalblue"></li>
+            <li class="roller-item" style="background-color:salmon"></li>
+            <li class="roller-item" style="background-color:sienna"></li>
+            <li class="roller-item" style="background-color:teal"></li>
+            <li class="roller-item" style="background-color:rebeccapurple"></li>
+            <li class="roller-item" style="background-color:royalblue"></li>
+            <li class="roller-item" style="background-color:salmon"></li>
+            <li class="roller-item" style="background-color:sienna"></li>
+            <li class="roller-item" style="background-color:teal"></li>
+            <li class="roller-item" style="background-color:rebeccapurple"></li>
+            <li class="roller-item" style="background-color:blue"></li>
+            <li class="roller-item" style="background-color:red"></li>
+            <li class="roller-item" style="background-color:green"></li>
+            <li class="roller-item" style="background-color:yellow"></li>
+            <li class="roller-item" style="background-color:rosybrown"></li>
+            <li class="roller-item" style="background-color:royalblue"></li>
+            <li class="roller-item" style="background-color:salmon"></li>
+            <li class="roller-item" style="background-color:sienna"></li>
+            <li class="roller-item" style="background-color:teal"></li>
+        </ul>
+    </div>
+
+    <div class="roller-scrollbar-wrap">
+        <div class="roller-scrollbar">
+            <div class="roller-scrollbar-handler"></div>
+        </div>
+    </div>
+
+    <div class="roller-action-wrap">
+        <button class="roller-left"> < </button>
+        <button class="roller-right"> > </button>
+    </div>
+</div>
+
+<div id="roller-2" class="roller-wrap" style="padding: 200px">
+    <div class="roller-collection-wrap">
+        <ul class="roller-collection">
+            <li class="roller-item" style="background-color:rebeccapurple"></li>
+            <li class="roller-item" style="background-color:blue"></li>
+            <li class="roller-item" style="background-color:red"></li>
+            <li class="roller-item" style="background-color:green"></li>
+            <li class="roller-item" style="background-color:yellow"></li>
+            <li class="roller-item" style="background-color:rosybrown"></li>
+            <li class="roller-item" style="background-color:darkcyan"></li>
+            <li class="roller-item" style="background-color:royalblue"></li>
+            <li class="roller-item" style="background-color:salmon"></li>
+            <li class="roller-item" style="background-color:sienna"></li>
+            <li class="roller-item" style="background-color:teal"></li>
+            <li class="roller-item" style="background-color:rebeccapurple"></li>
+            <li class="roller-item" style="background-color:royalblue"></li>
+            <li class="roller-item" style="background-color:salmon"></li>
+            <li class="roller-item" style="background-color:sienna"></li>
+            <li class="roller-item" style="background-color:teal"></li>
+        </ul>
+    </div>
+
+    <div class="roller-scrollbar-wrap">
+        <div class="roller-scrollbar">
+            <div class="roller-scrollbar-handler"></div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="assets/css/mdgroller.css"/>
+<script src="assets/js/mdgroller.min.js"></script>
+<script>
+    new MdgRoller({
+        mainWrap: '#roller-1',
+        collectionWrap: '.roller-collection',
+        scrollBarWrap: '.roller-scrollbar-wrap',
+        scrollBarHandler: '.roller-scrollbar-handler',
+        buttonLeft: '.roller-left',
+        buttonRight: '.roller-right',
+        buttonScroll: 200,
+        css: {
+            paddingX: 100
+        }
+    });
+    new MdgRoller({
+        mainWrap: '#roller-2',
+        collectionWrap: '.roller-collection',
+        scrollBarWrap: '.roller-scrollbar-wrap',
+        scrollBarHandler: '.roller-scrollbar-handler',
+    });
+</script>
+</body>
+</html>

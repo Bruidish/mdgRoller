@@ -1,0 +1,19 @@
+{
+    "name": "mdg-roller",
+    "version": "1.0.0",
+    "description": "Use Babel to compile js to es2015 and Compass to compile scss to css. It will minify both",
+    "scripts": {
+        "build:js": "babel --env=production --presets=es2015,minify js/mdgroller.js -o ../assets/js/mdgroller.min.js --mangle.keepClassName --no-comments",
+        "watch:css": "compass watch --sass-dir=scss --css-dir=../assets/css --output-style=compressed --sourcemap",
+        "watch:js": "onchange \"js/**/*\" -- npm run build:js",
+        "watch": "npm run watch:js & npm run watch:css"
+    },
+    "dependencies": {
+        "babel-cli": "latest",
+        "babel-core": "latest",
+        "babel-preset-es2015": "latest",
+        "babel-preset-minify": "latest",
+        "onchange": "latest",
+        "compass": "latest"
+    }
+}
