@@ -88,6 +88,22 @@
     </div>
 </div>
 
+<div id="roller-3" class="roller-wrap" style="padding: 200px">
+    <div class="roller-collection-wrap">
+        <ul class="roller-collection">
+            <li class="roller-item" style="background-color:rebeccapurple"></li>
+            <li class="roller-item" style="background-color:blue"></li>
+            <li class="roller-item" style="background-color:red"></li>
+        </ul>
+    </div>
+
+    <div class="roller-scrollbar-wrap">
+        <div class="roller-scrollbar">
+            <div class="roller-scrollbar-handler"></div>
+        </div>
+    </div>
+</div>
+
 <link rel="stylesheet" href="assets/css/mdgroller.css"/>
 <script src="assets/js/mdgroller.min.js"></script>
 <script>
@@ -105,6 +121,12 @@
     });
     new MdgRoller({
         mainWrap: '#roller-2',
+        collectionWrap: '.roller-collection',
+        scrollBarWrap: '.roller-scrollbar-wrap',
+        scrollBarHandler: '.roller-scrollbar-handler',
+    });
+    new MdgRoller({
+        mainWrap: '#roller-3',
         collectionWrap: '.roller-collection',
         scrollBarWrap: '.roller-scrollbar-wrap',
         scrollBarHandler: '.roller-scrollbar-handler',

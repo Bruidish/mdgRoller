@@ -40,6 +40,8 @@
             z-index: 1;
             display: grid;
             grid-template-rows: auto;
+            margin-left: auto;
+            margin-right: auto;
 
             .roller-item {
                 width: 200px;

@@ -22,8 +22,9 @@ class MdgRoller {
    */
   constructor(params) {
     this.initOptions()
+    this.setParams(params)
 
-    if (typeof params.mainWrap == 'undefined' || typeof params.collectionWrap == 'undefined') {
+    if (!params.mainWrap || !params.collectionWrap) {
       return null
     }
 
@@ -38,12 +39,10 @@ class MdgRoller {
     if (!this.$collectionWrap) {
       return null
     }
-    this.setOptions(params)
-    this.renderCollection()
-    this.eventsCollection()
+    this.renderCollection(true)
 
     // Scrollbar components
-    if (typeof params.scrollBarWrap != 'undefined' && typeof params.scrollBarHandler != 'undefined') {
+    if (params.scrollBarWrap && params.scrollBarHandler) {
       this.$scrollBarWrap = this.$mainWrap.querySelector(params.scrollBarWrap);
       this.$scrollBarHandler = this.$mainWrap.querySelector(params.scrollBarHandler);
       if (this.$scrollBarWrap && this.$scrollBarHandler) {
@@ -54,7 +53,7 @@ class MdgRoller {
     }
 
     // Action components
-    if (typeof params.buttonLeft != 'undefined' && typeof params.buttonRight != 'undefined') {
+    if (params.buttonLeft && params.buttonRight) {
       this.$buttonLeft = this.$mainWrap.querySelector(params.buttonLeft);
       this.$buttonRight = this.$mainWrap.querySelector(params.buttonRight);
       if (this.$buttonLeft && this.$buttonRight) {
@@ -64,7 +63,8 @@ class MdgRoller {
       }
     }
 
-    // Global components
+    // Events
+    this.eventsCollection()
     this.events();
 
     return this
@@ -104,15 +104,16 @@ class MdgRoller {
    *
    * @return {void}
    */
-  setOptions(params) {
-    if (typeof params.buttonScroll != 'undefined') {
-      this.buttonScroll = params.buttonScroll
-    }
+  setParams(params) {
+    params.mainWrap = params.mainWrap || null
+    params.collectionWrap = params.collectionWrap || null
+    params.scrollBarWrap = params.scrollBarWrap || null
+    params.scrollBarHandler = params.scrollBarHandler || null
+    params.buttonLeft = params.buttonLeft || null
+    params.buttonScroll = params.buttonScroll || null
 
     if (typeof params.css != 'undefined') {
-      if (typeof params.css.paddingX != 'undefined') {
-        this.css.paddingX = params.css.paddingX
-      }
+      this.css.paddingX = params.css.paddingX || this.css.paddingX
     }
   }
 
@@ -120,8 +121,8 @@ class MdgRoller {
    *
    * @return {void}
    */
-  renderCollection() {
-    if (this.css.paddingX) {
+  renderCollection(first = false) {
+    if (first && this.css.paddingX) {
       let emptyElement = document.createElement('li')
       emptyElement.style.width = `${this.css.paddingX}px`
 
@@ -129,8 +130,20 @@ class MdgRoller {
       this.$collectionWrap.style.paddingLeft = `${this.css.paddingX}px`
     }
 
+    // Construct grid regarding width of each child
+    let gridTemplateColumns = '';
+    [...this.$collectionWrap.querySelectorAll('li')].forEach(el => {
+      gridTemplateColumns += ` ${el.offsetWidth}px`
+    });
+
     this.collectionCount = this.$collectionWrap.childElementCount
-    this.$collectionWrap.style.gridTemplateColumns = `repeat(${this.collectionCount}, auto)`
+    this.$collectionWrap.style.gridTemplateColumns = gridTemplateColumns
+
+    // Center smallest colletion
+    this.$collectionWrap.style.width = 'unset'
+    if (this.$collectionWrap.offsetWidth >= this.$collectionWrap.scrollWidth) {
+      this.$collectionWrap.style.width = 'max-content'
+    }
   }
 
   /** Render for the scrollBar
@@ -160,18 +173,6 @@ class MdgRoller {
    */
   moveScrollBarHandler() {
     this.$scrollBarHandler.style.marginLeft = `${this.$collectionWrap.parentNode.scrollLeft * this.collectionViewportDelta / 100}px`
-  }
-
-  /** Events of the collection
-   *
-   * @return {void}
-   */
-  eventsCollection() {
-    // On scroll on collection
-    this.$collectionWrap.parentNode.addEventListener('scroll', () => {
-      this.moveScrollBarHandler()
-      this.renderButtons()
-    });
   }
 
   /** Events of the scrollbar
@@ -223,6 +224,18 @@ class MdgRoller {
     this.$buttonRight.addEventListener('mouseup', () => this.$collectionWrap.parentNode.scrollLeft += this.buttonScroll)
   }
 
+  /** Events of the collection
+   *
+   * @return {void}
+   */
+  eventsCollection() {
+    // On scroll on collection
+    this.$collectionWrap.parentNode.addEventListener('scroll', () => {
+      this.scrollBarExists ? this.moveScrollBarHandler() : null
+      this.buttonExists ? this.renderButtons() : null
+    });
+  }
+
   /** Events for global
    *
    * @return {void}
@@ -230,10 +243,9 @@ class MdgRoller {
   events() {
     // Resize window
     window.addEventListener('resize', () => {
-      if (this.scrollBarExists) {
-        this.renderScrollBar()
-        this.moveScrollBarHandler();
-      }
+      this.renderCollection();
+      this.scrollBarExists ? this.renderScrollBar() : null
+      this.scrollBarExists ? this.moveScrollBarHandler() : null
     })
   }
 
