@@ -39,7 +39,7 @@ class MdgRoller {
     if (!this.$collectionWrap) {
       return null
     }
-    this.renderCollection(true)
+    this.renderCollection(true);
 
     // Scrollbar components
     if (params.scrollBarWrap && params.scrollBarHandler) {
@@ -47,8 +47,6 @@ class MdgRoller {
       this.$scrollBarHandler = this.$mainWrap.querySelector(params.scrollBarHandler);
       if (this.$scrollBarWrap && this.$scrollBarHandler) {
         this.scrollBarExists = true
-        this.renderScrollBar()
-        this.eventsScrollBar()
       }
     }
 
@@ -58,8 +56,6 @@ class MdgRoller {
       this.$buttonRight = this.$mainWrap.querySelector(params.buttonRight);
       if (this.$buttonLeft && this.$buttonRight) {
         this.buttonExists = true
-        this.renderButtons()
-        this.eventsButtons()
       }
     }
 
@@ -133,7 +129,7 @@ class MdgRoller {
     // Construct grid regarding width of each child
     let gridTemplateColumns = '';
     [...this.$collectionWrap.querySelectorAll('li')].forEach(el => {
-      gridTemplateColumns += ` ${el.offsetWidth}px`
+      gridTemplateColumns += (typeof el.dataset.width != 'undefined') ? ` ${el.dataset.width}` : ` ${el.offsetWidth}px`
     });
 
     this.collectionCount = this.$collectionWrap.childElementCount
@@ -141,7 +137,7 @@ class MdgRoller {
 
     // Center smallest colletion
     this.$collectionWrap.style.width = 'unset'
-    if (this.$collectionWrap.offsetWidth >= this.$collectionWrap.scrollWidth) {
+    if (this.$collectionWrap.clientWidth >= this.$collectionWrap.scrollWidth) {
       this.$collectionWrap.style.width = 'max-content'
     }
   }
@@ -155,6 +151,7 @@ class MdgRoller {
     this.collectionViewportDelta = this.$collectionWrap.clientWidth / this.$collectionWrap.scrollWidth * 100;
 
     // Scrollbar style
+    this.$scrollBarWrap.style.opacity = 1;
     this.$scrollBarWrap.style.paddingLeft = `${this.css.paddingX}px`;
     this.$scrollBarWrap.style.paddingRight = `${this.css.paddingX}px`;
 
@@ -242,11 +239,18 @@ class MdgRoller {
    */
   events() {
     // Resize window
+    window.addEventListener('load', () => {
+      this.scrollBarExists ? this.renderScrollBar() : null
+      this.scrollBarExists ? this.moveScrollBarHandler() : null
+      this.buttonExists ? this.renderButtons() : null
+      this.buttonExists ? this.eventsButtons() : null
+      this.$mainWrap.style.opacity = 'unset'
+      this.$mainWrap.style.filter = 'unset'
+    })
     window.addEventListener('resize', () => {
       this.renderCollection();
       this.scrollBarExists ? this.renderScrollBar() : null
       this.scrollBarExists ? this.moveScrollBarHandler() : null
     })
   }
-
 }
