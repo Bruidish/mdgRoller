@@ -5,6 +5,8 @@
  * @package MdgRoller
  */
 
+var MdgRollerCounter = 0;
+
 class MdgRoller {
   /** constructor
    *
@@ -21,8 +23,12 @@ class MdgRoller {
    * @return object this
    */
   constructor(params) {
-    this.initOptions()
-    this.setParams(params)
+    MdgRollerCounter++;
+    this.id = MdgRollerCounter;
+
+    this._params = params;
+    this.initOptions();
+    this.setParams(params);
 
     if (!params.mainWrap || !params.collectionWrap) {
       return null
@@ -77,6 +83,7 @@ class MdgRoller {
    * @return {void}
    */
   initOptions() {
+    this.resizeTicker = null          /** @var timeout render window resize after user stop to resizing */
     this.$mainWrap = null             /** @var noeud parent of all components */
     this.$collectionWrap = null       /** @var noeud parent of collection */
     this.scrollBarExists = false      /** @var boolean to specify if scrollbar exists */
@@ -89,7 +96,7 @@ class MdgRoller {
     this.collectionCount = 0          /** @var interger number of items in collection */
     this.collectionViewportDelta = 0  /** @var interger part of collection visible */
     this.css = {
-      paddingX: 0
+      paddingX: 0                     /** @var interger Padding applied to button and scrollbar  */
     }
   }
 
@@ -108,8 +115,18 @@ class MdgRoller {
     params.buttonLeft = params.buttonLeft || null
     params.buttonScroll = params.buttonScroll || null
 
+    // Css Params
     if (typeof params.css != 'undefined') {
-      this.css.paddingX = params.css.paddingX || this.css.paddingX
+      this.css.paddingX = typeof params.css.paddingX != 'undefined' ? params.css.paddingX : this.css.paddingX
+
+      // Breakpoints
+      if (typeof params.css.breakpoints != 'undefined') {
+        for (const [breakpoint, breakpointParams] of Object.entries(params.css.breakpoints)) {
+          if (breakpoint >= document.body.clientWidth) {
+            this.css.paddingX = typeof breakpointParams.paddingX != 'undefined' ? breakpointParams.paddingX : this.css.paddingX
+          }
+        }
+      }
     }
   }
 
@@ -118,13 +135,25 @@ class MdgRoller {
    * @return {void}
    */
   renderCollection(first = false) {
-    if (first && this.css.paddingX) {
-      let emptyElement = document.createElement('li')
-      emptyElement.style.width = `${this.css.paddingX}px`
+    var $gostElement = document.getElementById(`${this.id}-ghost-element`);
 
-      this.$collectionWrap.appendChild(emptyElement)
-      this.$collectionWrap.style.paddingLeft = `${this.css.paddingX}px`
+    // Remove ghost element if useless
+    if ($gostElement && !this.css.paddingX) {
+      $gostElement.remove();
     }
+
+    // Create ghost Element to add a nice padding right
+    if (this.css.paddingX) {
+      if ($gostElement) {
+        $gostElement.style.width = `${this.css.paddingX}px`
+      } else {
+        let emptyElement = document.createElement('li')
+        emptyElement.style.width = `${this.css.paddingX}px`
+        emptyElement.setAttribute('id', `${this.id}-ghost-element`)
+        this.$collectionWrap.appendChild(emptyElement)
+      }
+    }
+    this.$collectionWrap.style.paddingLeft = `${this.css.paddingX}px`
 
     // Construct grid regarding width of each child
     let gridTemplateColumns = '';
@@ -248,9 +277,15 @@ class MdgRoller {
       this.$mainWrap.style.filter = 'unset'
     })
     window.addEventListener('resize', () => {
-      this.renderCollection();
-      this.scrollBarExists ? this.renderScrollBar() : null
-      this.scrollBarExists ? this.moveScrollBarHandler() : null
+      clearTimeout(this.resizeTicker);
+      this.$mainWrap.style.filter = 'blur(3px)'
+      this.resizeTicker = setTimeout(() => {
+        this.setParams(this._params);
+        this.renderCollection();
+        this.scrollBarExists ? this.renderScrollBar() : null
+        this.scrollBarExists ? this.moveScrollBarHandler() : null
+        this.$mainWrap.style.filter = 'unset'
+      }, 100)
     })
   }
 }

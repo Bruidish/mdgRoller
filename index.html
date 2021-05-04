@@ -116,7 +116,12 @@
         buttonRight: '.roller-right',
         buttonScroll: 200,
         css: {
-            paddingX: 100
+            paddingX: 100,
+            breakpoints: {
+                768: {
+                    paddingX: 0
+                }
+            }
         }
     });
     new MdgRoller({
