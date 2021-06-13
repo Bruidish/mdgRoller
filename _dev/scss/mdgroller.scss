@@ -10,8 +10,6 @@
 @import 'compass';
 @import 'variables';
 
-@include global-reset;
-
 .roller-wrap {
     box-sizing: border-box;
     * {
@@ -107,7 +105,7 @@
             background: #fff;
             border: none;
             opacity: 0;
-            @include transition(opacity .3s, margin .3s);
+            @include transition(opacity .3s ease-in-out, margin .3s ease-in-out, background .3s ease-in-out);
             @include border-radius(50%);
 
             &:hover {
