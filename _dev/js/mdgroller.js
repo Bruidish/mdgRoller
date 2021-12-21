@@ -67,6 +67,7 @@ class MdgRoller {
 
     // Events
     this.eventsCollection()
+    this.eventsScrollBar()
     this.events();
 
     return this
