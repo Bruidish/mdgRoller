@@ -20,9 +20,12 @@
     margin: 0 auto;
     position: relative;
     background-color: $color-background;
-    filter: blur(3px);
-    opacity: .6;
     @include transition(opacity .3s ease-in-out, filter .3s ease-in-out);
+
+    &:not(.roller-initialized) {
+        filter: blur(3px);
+        opacity: .6;
+    }
 
     .roller-collection-wrap {
         scroll-behavior: smooth;
@@ -43,11 +46,16 @@
             grid-template-rows: auto;
             margin-left: auto;
             margin-right: auto;
+            gap: 10px;
 
-            .roller-item {
+            &:not(.roller-collection-initialized) {
+                display: flex;
+                width: max-content;
+            }
+
+            li {
                 width: 200px;
                 height: 300px;
-                border: 5px solid $color-background;
                 list-style: none;
             }
         }
@@ -79,43 +87,41 @@
             }
 
         }
-
-        &.isInactive {
-            height: 0;
-            overflow: hidden;
-        }
     }
 
     .roller-action-wrap {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 90%;
-        z-index: 10;
-        pointer-events: none;
-
-        button {
+        display: none;
+        @media (min-width: 680px) {
             position: absolute;
-            top: 50%;
-            cursor: pointer;
-            transform: translateY(-50%);
-            pointer-events: all;
-            width: 50px;
-            height: 50px;
-            background: #fff;
-            border: none;
-            opacity: 0;
-            @include transition(opacity .3s ease-in-out, margin .3s ease-in-out, background .3s ease-in-out);
-            @include border-radius(50%);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 90%;
+            z-index: 10;
+            pointer-events: none;
 
-            &:hover {
-                margin: 0 30px;
-                opacity: .9!important;
-            }
-            &.o-none {
-                cursor: default;
-                opacity: 0!important;
+            button {
+                position: absolute;
+                top: 50%;
+                cursor: pointer;
+                transform: translateY(-50%);
+                pointer-events: all;
+                width: 50px;
+                height: 50px;
+                background-color: #fff;
+                border: none;
+                opacity: 0;
+                @include transition(opacity .3s ease-in-out, margin .3s ease-in-out, background-color .3s ease-in-out);
+                @include border-radius(50%);
+
+                &:hover {
+                    margin: 0 30px;
+                    opacity: .9!important;
+                }
+                &.o-none {
+                    cursor: default;
+                    opacity: 0!important;
+                }
             }
         }
     }
@@ -128,4 +134,5 @@
             }
         }
     }
+
 }

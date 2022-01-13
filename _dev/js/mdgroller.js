@@ -165,8 +165,10 @@ class MdgRoller {
     this.collectionCount = this.$collectionWrap.childElementCount
     this.$collectionWrap.style.gridTemplateColumns = gridTemplateColumns
 
+    // Must be placed before to center smallest collection
+    this.$collectionWrap.classList.add('roller-collection-initialized')
+
     // Center smallest colletion
-    this.$collectionWrap.style.width = 'unset'
     if (this.$collectionWrap.clientWidth >= this.$collectionWrap.scrollWidth) {
       this.$collectionWrap.style.width = 'max-content'
     }
@@ -181,7 +183,6 @@ class MdgRoller {
     this.collectionViewportDelta = this.$collectionWrap.clientWidth / this.$collectionWrap.scrollWidth * 100;
 
     // Scrollbar style
-    this.$scrollBarWrap.style.opacity = 1;
     this.$scrollBarWrap.style.paddingLeft = `${this.css.paddingX}px`;
     this.$scrollBarWrap.style.paddingRight = `${this.css.paddingX}px`;
 
@@ -190,7 +191,7 @@ class MdgRoller {
     this.$scrollBarHandler.style.width = `${scrollHandlerSize}px`;
 
     // Occulte scrollbar if useless
-    this.$scrollBarWrap.classList.toggle('isInactive', (this.collectionViewportDelta == 100 || scrollHandlerSize <= 20));
+    this.$scrollBarWrap.style.opacity = (this.collectionViewportDelta == 100 || scrollHandlerSize <= 20) ? 0 : 1;
   }
 
   /** Position Scrollbar handler concidering collection scroll
@@ -207,27 +208,34 @@ class MdgRoller {
    * @return {void}
    */
   eventsScrollBar() {
-    // On drag and drop handler
-    this.$scrollBarHandler.addEventListener('mousedown', (event) => {
-      let that = this;
-      let pos = event.clientX - parseInt(this.$scrollBarHandler.style.marginLeft); // Position in the handler
+    if (this.scrollBarExists) {
+      // On drag and drop handler
+      this.$scrollBarHandler.addEventListener('mousedown', (event) => {
+        let that = this;
+        let pos = event.clientX - parseInt(this.$scrollBarHandler.style.marginLeft); // Position in the handler
 
-      this.$collectionWrap.parentNode.style.scrollBehavior = 'inherit';
-      this.$scrollBarHandler.classList.add('focus')
+        document.body.style.userSelect = 'none';
+        this.$collectionWrap.parentNode.style.pointerEvents = 'none';
+        this.$collectionWrap.parentNode.style.scrollBehavior = 'inherit';
+        this.$scrollBarHandler.classList.add('focus')
 
-      function handlerMouseMove(event) {
-        if (event.clientX > 0) {
-          that.$collectionWrap.parentNode.scrollLeft = Math.ceil((event.clientX - pos) / that.collectionViewportDelta * 100);
+        function handlerMouseMove(event) {
+          if (event.clientX > 0) {
+            that.$collectionWrap.parentNode.scrollLeft = Math.ceil((event.clientX - pos) / that.collectionViewportDelta * 100);
+          }
         }
-      }
 
-      window.addEventListener('mousemove', handlerMouseMove)
-      window.addEventListener('mouseup', () => {
-        window.removeEventListener('mousemove', handlerMouseMove)
-        this.$collectionWrap.parentNode.style.scrollBehavior = 'smooth';
-        this.$scrollBarHandler.classList.remove('focus')
+        window.addEventListener('mousemove', handlerMouseMove)
+
+        window.addEventListener('mouseup', () => {
+          window.removeEventListener('mousemove', handlerMouseMove)
+          document.body.style.userSelect = null;
+          this.$collectionWrap.parentNode.style.pointerEvents = null;
+          this.$collectionWrap.parentNode.style.scrollBehavior = 'smooth';
+          this.$scrollBarHandler.classList.remove('focus')
+        })
       })
-    })
+    }
   }
 
   /** Render for buttons
@@ -268,24 +276,22 @@ class MdgRoller {
    * @return {void}
    */
   events() {
-    // Resize window
     window.addEventListener('load', () => {
       this.scrollBarExists ? this.renderScrollBar() : null
       this.scrollBarExists ? this.moveScrollBarHandler() : null
       this.buttonExists ? this.renderButtons() : null
       this.buttonExists ? this.eventsButtons() : null
-      this.$mainWrap.style.opacity = 'unset'
-      this.$mainWrap.style.filter = 'unset'
+
+      this.$mainWrap.classList.add('roller-initialized')
     })
+    // Resize window
     window.addEventListener('resize', () => {
       clearTimeout(this.resizeTicker);
-      this.$mainWrap.style.filter = 'blur(3px)'
       this.resizeTicker = setTimeout(() => {
         this.setParams(this._params);
         this.renderCollection();
         this.scrollBarExists ? this.renderScrollBar() : null
         this.scrollBarExists ? this.moveScrollBarHandler() : null
-        this.$mainWrap.style.filter = 'unset'
       }, 100)
     })
   }
