@@ -25,6 +25,10 @@
     &:not(.roller-initialized) {
         filter: blur(3px);
         opacity: .6;
+
+        .roller-action-wrap {
+            display: none;
+        }
     }
 
     .roller-collection-wrap {
@@ -90,7 +94,6 @@
     }
 
     .roller-action-wrap {
-        display: none;
         @media (min-width: 680px) {
             position: absolute;
             top: 0;
