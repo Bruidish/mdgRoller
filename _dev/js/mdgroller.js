@@ -123,7 +123,7 @@ class MdgRoller {
       // Breakpoints
       if (typeof params.css.breakpoints != 'undefined') {
         for (const [breakpoint, breakpointParams] of Object.entries(params.css.breakpoints)) {
-          if (breakpoint >= document.body.clientWidth) {
+          if (breakpoint < document.body.clientWidth) {
             this.css.paddingX = typeof breakpointParams.paddingX != 'undefined' ? breakpointParams.paddingX : this.css.paddingX
           }
         }
