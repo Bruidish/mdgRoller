@@ -94,15 +94,14 @@ class MdgRoller {
     this.$buttonLeft = null           /** @var noeud of left button to navigate */
     this.$buttonRight = null          /** @var noeud of right button to navigate */
     this.buttonScroll = 300           /** @var integer scroll of collection on button click */
-    this.collectionCount = 0          /** @var interger number of items in collection */
-    this.collectionViewportDelta = 0  /** @var interger part of collection visible */
+    this.collectionCount = 0          /** @var integer number of items in collection */
+    this.collectionViewportDelta = 0  /** @var integer part of collection visible */
     this.css = {
-      paddingX: 0                     /** @var interger Padding applied to button and scrollbar  */
+      paddingX: 0                     /** @var integer Padding applied to button and scrollbar  */
     }
   }
 
   /** Set differents options regarding breakpoints
-   * @todo add breakpoint mecanics
    *
    * @param object
    *
