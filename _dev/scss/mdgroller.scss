@@ -1,7 +1,7 @@
 /**
  * @author Michel Dumont <michel.dumont.io>
  * @see http://compass-style.org/reference/compass/css3/
- * @version 1.0.0 - 2021-01-23
+ * @version 1.0.1 - 2023-01-04
  * @license http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  * @package MdgRoller
  */
@@ -44,8 +44,6 @@
         padding-bottom: 20px;
 
         .roller-collection {
-            position: relative;
-            z-index: 1;
             display: grid;
             grid-template-rows: auto;
             margin-left: auto;
